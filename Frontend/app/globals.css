@@ -1,0 +1,94 @@
+@import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-geist-sans: "Syne", sans-serif;
+  --font-geist-mono: "JetBrains Mono", monospace;
+  --font-syne: "Syne", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  cursor: none;
+}
+
+input,
+textarea,
+select {
+  cursor: text;
+}
+
+body {
+  background-color: #09090b;
+  color: #e4e4f0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #282834;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3a3a52;
+}
+
+/* Drag ghost */
+body.dragging * {
+  cursor: grabbing !important;
+}
+
+.custom-cursor-blob {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 56px;
+  height: 56px;
+  pointer-events: none;
+  transform: translate3d(-50%, -50%, 0);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at center,
+    rgba(95, 161, 255, 0.55),
+    rgba(28, 35, 74, 0.18) 50%,
+    transparent 82%
+  );
+  filter: blur(16px);
+  transition: width 150ms ease, height 150ms ease,
+    background-color 150ms ease, opacity 150ms ease;
+  opacity: 0.96;
+  z-index: 9999;
+  mix-blend-mode: screen;
+  will-change: left, top, width, height;
+}
+
+.custom-cursor-hover {
+  width: 96px;
+  height: 96px;
+  background: radial-gradient(
+    circle at center,
+    rgba(110, 188, 255, 0.72),
+    rgba(30, 40, 83, 0.16) 45%,
+    transparent 78%
+  );
+  filter: blur(20px);
+}
