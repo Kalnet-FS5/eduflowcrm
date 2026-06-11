@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { requireAuth } from "@/lib/serverAuth";
 
+
+
 export async function PATCH(
   req: NextRequest,
   { params }: { params: { id: string; checklistId: string } }
@@ -32,7 +34,7 @@ export async function PATCH(
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
-    const updated = await prisma.$transaction(async (tx) => {
+    const updated = await prisma.$transaction(async (tx: any) => {
       // Update the checklist item
       const checklistItem = await tx.onboardingChecklist.update({
         where: { id: params.checklistId },
@@ -45,7 +47,7 @@ export async function PATCH(
         select: { status: true },
       });
 
-      const allCompleted = allItems.length > 0 && allItems.every((i) => i.status === "done");
+      const allCompleted = allItems.length > 0 && allItems.every((i: any) => i.status === "done");
 
       if (allCompleted) {
         // Mark prospect as completed
