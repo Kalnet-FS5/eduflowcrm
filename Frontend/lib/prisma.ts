@@ -1,15 +1,6 @@
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import { config as loadEnv } from "dotenv";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 
-const envPath = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../Backend/.env");
-
 function createPrismaClient() {
-  if (!process.env.DATABASE_URL) {
-    loadEnv({ path: envPath });
-  }
-
   const databaseUrl = process.env.DATABASE_URL;
 
   if (!databaseUrl) {
@@ -40,10 +31,20 @@ const globalForPrisma = globalThis as typeof globalThis & {
   prisma?: any;
 };
 
-const prisma = globalForPrisma.prisma ?? createPrismaClient();
-
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
+// ✅ Named export for new routes
+export function getPrisma() {
+  if (!globalForPrisma.prisma) {
+    globalForPrisma.prisma = createPrismaClient();
+  }
+  return globalForPrisma.prisma;
 }
 
-export default prisma;
+// ✅ Default export — Proxy so existing routes keep working
+// But client is only created on first property ACCESS, not import
+const prismaProxy = new Proxy({} as any, {
+  get(_target, prop) {
+    return getPrisma()[prop];
+  },
+});
+
+export default prismaProxy;

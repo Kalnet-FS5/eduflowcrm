@@ -1,9 +1,9 @@
-// app/api/prospects/[id]/checklist/[checklistId]/route.ts — Prisma-backed checklist endpoint
+// app/api/prospects/[id]/checklist/[checklistId]/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/serverAuth";
 
-
+export const dynamic = "force-dynamic";
 
 export async function PATCH(
   req: NextRequest,
@@ -13,6 +13,8 @@ export async function PATCH(
   if (!auth.ok) return auth.response;
 
   try {
+    const prisma = getPrisma(); // ✅ lazy — only runs at request time, not build time
+
     const { status } = await req.json();
     if (status !== "TODO" && status !== "DONE") {
       return NextResponse.json({ error: "Invalid status" }, { status: 400 });
@@ -35,13 +37,11 @@ export async function PATCH(
     }
 
     const updated = await prisma.$transaction(async (tx: any) => {
-      // Update the checklist item
       const checklistItem = await tx.onboardingChecklist.update({
         where: { id: params.checklistId },
         data: { status: status === "DONE" ? "done" : "todo" },
       });
 
-      // Check if all checklist items are now completed
       const allItems = await tx.onboardingChecklist.findMany({
         where: { prospectId: params.id },
         select: { status: true },
@@ -50,7 +50,6 @@ export async function PATCH(
       const allCompleted = allItems.length > 0 && allItems.every((i: any) => i.status === "done");
 
       if (allCompleted) {
-        // Mark prospect as completed
         await tx.prospect.update({
           where: { id: params.id },
           data: {
@@ -59,7 +58,6 @@ export async function PATCH(
           },
         });
       } else {
-        // Reset completion if not all items are done
         await tx.prospect.update({
           where: { id: params.id },
           data: {
@@ -72,7 +70,6 @@ export async function PATCH(
       return checklistItem;
     });
 
-    // Get updated completion status
     const prospect = await prisma.prospect.findUnique({
       where: { id: params.id },
       select: {
