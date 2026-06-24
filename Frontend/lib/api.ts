@@ -3,7 +3,7 @@
 const BACKEND_URL =
   process.env.BACKEND_URL ||
   process.env.NEXT_PUBLIC_BACKEND_URL ||
-  "http://localhost:5000";
+  "https://eduflowcrm.onrender.com";
 const NORMALIZED_BACKEND_URL = BACKEND_URL.replace(/\/+$/, "");
 
 // ─── Stage Mapping ───────────────────────────────────────────────
