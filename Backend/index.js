@@ -47,10 +47,7 @@ server.use((req, res, next) => {
 //     credentials: true,
 // }));
 server.use(cors({
-    origin: [
-        "https://eduflowcrm.vercel.app",
-        "https://eduflowcrm-nd7yrgqi7-allauddin2.vercel.app"
-    ],
+    origin: true,
     credentials: true,
 }));
 server.use(express.json({ limit: "1mb" }));
