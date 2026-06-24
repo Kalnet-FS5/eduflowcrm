@@ -40,9 +40,16 @@ server.use((req, res, next) => {
 // server.use(cors({
     // origin: process.env.FRONTEND_URL || "http://localhost:3000",
     // credentials: true,
-    server.use(cors({
+//     server.use(cors({
+//     origin: [
+//         "https://eduflowcrm.vercel.app"
+//     ],
+//     credentials: true,
+// }));
+server.use(cors({
     origin: [
-        "https://eduflowcrm.vercel.app"
+        "https://eduflowcrm.vercel.app",
+        "https://eduflowcrm-nd7yrgqi7-allauddin2.vercel.app"
     ],
     credentials: true,
 }));
