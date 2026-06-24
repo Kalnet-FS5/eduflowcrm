@@ -37,8 +37,13 @@ server.use((req, res, next) => {
 });
 
 // ─── Core Middleware ─────────────────────────────────────────────
-server.use(cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+// server.use(cors({
+    // origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    // credentials: true,
+    server.use(cors({
+    origin: [
+        "https://eduflowcrm.vercel.app"
+    ],
     credentials: true,
 }));
 server.use(express.json({ limit: "1mb" }));
